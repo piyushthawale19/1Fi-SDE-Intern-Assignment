@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+  orders    Order[]
+}
+
+model MarketplaceProduct {
+  id               String           @id @default(uuid())
+  brand            String
+  name             String
+  description      String
+  category         String
+  basePrice        Float
+  discountedPrice  Float
+  images           String           // JSON array of image URLs
+  specifications   String           // JSON object of spec key-value pairs
+  inStock          Boolean          @default(true)
+  createdAt        DateTime         @default(now())
+  variants         ProductVariant[]
+  emiPlans         EMIPlan[]
+  orderItems       Order[]
+}
+
+model ProductVariant {
+  id            String             @id @default(uuid())
+  productId     String
+  product       MarketplaceProduct @relation(fields: [productId], references: [id])
+  label         String             // e.g. "128GB - Midnight Black"
+  type          String             // "storage", "color", "size", "config"
+  value         String             // e.g. "128GB", "Black", "S"
+  priceModifier Float              @default(0)
+  available     Boolean            @default(true)
+  orders        Order[]
+}
+
+model EMIPlan {
+  id             String             @id @default(uuid())
+  productId      String
+  product        MarketplaceProduct @relation(fields: [productId], references: [id])
+  tenureMonths   Int
+  interestRate   Float              // annual interest rate %
+  processingFee  Float              @default(0)
+  orders         Order[]
+}
+
+model Order {
+  id            String             @id @default(uuid())
+  userId        String
+  user          User               @relation(fields: [userId], references: [id])
+  productId     String
+  product       MarketplaceProduct @relation(fields: [productId], references: [id])
+  variantId     String?
+  variant       ProductVariant?    @relation(fields: [variantId], references: [id])
+  emiPlanId     String?
+  emiPlan       EMIPlan?           @relation(fields: [emiPlanId], references: [id])
+  totalAmount   Float
+  monthlyEMI    Float?
+  status        String             @default("PENDING")
+  createdAt     DateTime           @default(now())
+}
