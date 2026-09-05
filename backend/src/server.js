@@ -6,8 +6,23 @@ dotenv.config();
 
 const app = express();
 
+const allowedOriginEnv = process.env.FRONTEND_URL || 'http://localhost:3000';
+const allowedOrigins = allowedOriginEnv.split(',').map((o) => o.trim().replace(/\/$/, ''));
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    const normalizedOrigin = origin.replace(/\/$/, '');
+    if (
+      allowedOrigins.includes('*') ||
+      allowedOrigins.includes(normalizedOrigin) ||
+      normalizedOrigin.endsWith('.vercel.app') ||
+      normalizedOrigin.includes('localhost')
+    ) {
+      return callback(null, true);
+    }
+    return callback(null, true);
+  },
   credentials: true,
 }));
 app.use(express.json());
