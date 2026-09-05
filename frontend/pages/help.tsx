@@ -136,7 +136,7 @@ export default function HelpPage() {
             </p>
 
             {submitted ? (
-              <div className="alert alert-success" style={{ textAlignment: 'center', fontWeight: 600 }}>
+              <div className="alert alert-success" style={{ textAlign: 'center', fontWeight: 600 }}>
                 ✓ Ticket submitted! Our support specialist will contact you shortly.
               </div>
             ) : (
