@@ -10,6 +10,8 @@ import { formatCurrency, calculateEMI } from '@/lib/emiUtils';
 const BRANDS = [
   {
     name: 'Apple',
+    category: 'Smartphones & Laptops',
+    discount: 'Up to 24m No-Cost EMI',
     logo: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
         <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.09c.65-.79 1.1-1.9 1-3.09-1.05.04-2.32.7-3.06 1.57-.66.77-1.14 1.92-1 3.09 1.18.09 2.37-.58 3.06-1.57z" />
@@ -18,6 +20,8 @@ const BRANDS = [
   },
   {
     name: 'Samsung',
+    category: 'Smartphones & TVs',
+    discount: 'Instant ₹5,000 Off',
     logo: (
       <span style={{ fontWeight: 900, fontSize: '9px', letterSpacing: '0.2px', textTransform: 'uppercase', color: 'var(--primary)' }}>
         SAMSUNG
@@ -25,7 +29,19 @@ const BRANDS = [
     ),
   },
   {
+    name: 'Google',
+    category: 'Pixel & AI Devices',
+    discount: 'Flat ₹7,000 Off',
+    logo: (
+      <span style={{ fontWeight: 800, fontSize: '11px', color: '#4285F4' }}>
+        Google
+      </span>
+    ),
+  },
+  {
     name: 'Sony',
+    category: 'Audio & Cameras',
+    discount: 'Extra 10% Cashback',
     logo: (
       <span style={{ fontWeight: 900, fontSize: '11px', letterSpacing: '1px', fontFamily: 'serif', color: 'var(--primary)' }}>
         SONY
@@ -33,7 +49,19 @@ const BRANDS = [
     ),
   },
   {
+    name: 'Dell',
+    category: 'High-Perf Laptops',
+    discount: 'Free Backpack + EMI',
+    logo: (
+      <span style={{ fontWeight: 900, fontSize: '11px', color: '#007DB8' }}>
+        DELL
+      </span>
+    ),
+  },
+  {
     name: 'OnePlus',
+    category: 'Flagship Phones',
+    discount: 'No Cost EMI from ₹2,499',
     logo: (
       <span style={{ fontWeight: 800, fontSize: '12px', color: 'var(--primary)' }}>
         1+
@@ -41,7 +69,29 @@ const BRANDS = [
     ),
   },
   {
+    name: 'LG',
+    category: 'OLED TVs & Home Tech',
+    discount: 'Zero Down Payment',
+    logo: (
+      <span style={{ fontWeight: 900, fontSize: '11px', color: '#A50034' }}>
+        LG
+      </span>
+    ),
+  },
+  {
+    name: 'Dyson',
+    category: 'Stylers & Air Care',
+    discount: 'Free Express Shipping',
+    logo: (
+      <span style={{ fontWeight: 900, fontSize: '10px', fontStyle: 'italic', letterSpacing: '0.5px', color: '#111' }}>
+        dyson
+      </span>
+    ),
+  },
+  {
     name: 'Bose',
+    category: 'ANC Headphones',
+    discount: 'Special 1Fi Price',
     logo: (
       <span style={{ fontWeight: 900, fontStyle: 'italic', fontSize: '11px', letterSpacing: '0.5px', color: 'var(--primary)' }}>
         BOSE
@@ -129,13 +179,15 @@ export default function ShopPage() {
               See all
             </Link>
           </div>
-          <div className="stub-section" style={{ background: '#F4F0FD', padding: '12px', borderRadius: '16px' }}>
+          
+          {/* Scrollable Brands */}
+          <div className="stub-section" style={{ background: '#F4F0FD', padding: '12px', borderRadius: '16px', overflowX: 'auto', flexWrap: 'nowrap' }}>
             {BRANDS.map((brand) => (
               <Link
                 key={brand.name}
                 href={`/shop/marketplace?brand=${encodeURIComponent(brand.name)}`}
                 className="stub-brand-card"
-                style={{ textDecoration: 'none', color: 'inherit' }}
+                style={{ textDecoration: 'none', color: 'inherit', flexShrink: 0 }}
               >
                 <div className="stub-brand-logo" style={{
                   width: '56px',
@@ -154,6 +206,36 @@ export default function ShopPage() {
                 </div>
                 <span className="stub-brand-name" style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)' }}>
                   {brand.name}
+                </span>
+              </Link>
+            ))}
+          </div>
+
+          {/* Top Brands Deals Spotlight */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '12px' }}>
+            {BRANDS.slice(0, 4).map((brand) => (
+              <Link
+                key={`spotlight-${brand.name}`}
+                href={`/shop/marketplace?brand=${encodeURIComponent(brand.name)}`}
+                style={{
+                  textDecoration: 'none',
+                  background: 'white',
+                  border: '1px solid #E4DCF9',
+                  borderRadius: '12px',
+                  padding: '10px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '4px',
+                  boxShadow: '0 2px 6px rgba(124, 58, 237, 0.04)',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)' }}>{brand.name}</span>
+                  <span style={{ fontSize: '10px', color: 'var(--primary)', fontWeight: 700 }}>Shop →</span>
+                </div>
+                <span style={{ fontSize: '10px', color: 'var(--text-tertiary)' }}>{brand.category}</span>
+                <span style={{ fontSize: '10px', background: '#F3EFFF', color: 'var(--primary)', fontWeight: 700, padding: '2px 6px', borderRadius: '4px', alignSelf: 'flex-start' }}>
+                  {brand.discount}
                 </span>
               </Link>
             ))}
